@@ -1,0 +1,43 @@
+body {
+	margin: 0;
+	padding: 0;
+	background: #efefef ;
+}
+.page {
+	margin: 10px;
+	box-shadow: #666 0 0 5px;
+	background: white;
+	word-break: break-word;
+	white-space: pre-wrap;
+}
+.paragraph {
+	min-height: 18px;
+	padding: 3px 0;
+}
+div.meter {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+	width: 300px;
+	height: 100px;
+	box-shadow: #666 0 0 5px;
+	background: white;
+	overflow: auto;
+}
+span.meter {
+	white-space: pre;
+}
+.cursor {
+	position: absolute;
+	border-left: 1px solid #666;
+	width: 0;
+	height: 30px;
+}
+.cursor.animate {
+	animation: blink-animation 1s steps(2, start) infinite;
+}
+@keyframes blink-animation {
+	to {
+		visibility: hidden;
+	}
+}

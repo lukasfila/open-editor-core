@@ -1,0 +1,18 @@
+{
+  "name": "open-editor",
+  "version": "0.11.11111",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^3.4.1",
+    "typescript-bundle": "*"
+  },
+  "scripts": {
+    "dependencies": "npm install",
+    "build": "tsc-bundle tsconfig.json",
+    "buildAndWatch": "tsc-bundle tsconfig.json --watch "
+  },
+  "author": "Lukáš Fíla",
+  "licence": "todo",
+  "private": true
+}
