@@ -1,5 +1,6 @@
 export class Fragment {
 	element: HTMLElement;
+	text: string = "";
 	constructor() {
 		this.element = document.createElement("div");
 	}

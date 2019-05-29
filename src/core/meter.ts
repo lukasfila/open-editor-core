@@ -27,7 +27,7 @@ export class Meter {
 		let width = this.meter.offsetWidth;
 
 		for (let i = 0; i < bounding.length; i++) {
-			if (bounding[i].width >= width) {
+			if (bounding[i].width >= width || i === bounding.length - 1) {
 				return {
 					left: bounding[i].left + width,
 					top: bounding[i].top,
@@ -36,7 +36,6 @@ export class Meter {
 			}
 			width -= bounding[i].width;
 		}
-		debugger;
 		return null;
 	}
 }

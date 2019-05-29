@@ -35,7 +35,34 @@ export class Editor {
 					this.writeEnter();
 					event.preventDefault();
 					break;
+				//backspace
+				case 8:
+					this.deleteChar(Direction.Left);
+					break;
+				//delete
+				case 46:
+					this.deleteChar(Direction.No);
+					break;
+				//right
+				case 39:
+					this.cursor.index++;
+					this.refreshCursor();
+					break;
+				//left
+				case 37:
+					this.cursor.index--;
+					this.refreshCursor();
+					break;
+				//up
+				case 38:
+					//todo use place caret by mouse event after its ready
+					break;
+				//down
+				case 40:
+					//todo use place caret by mouse event after its ready
+					break;
 				default:
+					console.log(event.keyCode);
 					break;
 			}
 		});
@@ -44,6 +71,29 @@ export class Editor {
 
 			this.write(character);
 		});
+	}
+
+	deleteChar(direction: Direction) {
+		let cursor = this.cursor,
+			fragment = this.getCursorFragment(),
+			paragraph = cursor.paragraph;
+
+		//nothing to delete
+		if (cursor.index + direction < 0 ) {
+			if (paragraph > 0) {
+				//todo delete paragraph
+			}
+			return;
+		}
+		if (fragment instanceof TextFragment) {
+			fragment.text = fragment.text.substring(0, cursor.index + direction) + fragment.text.substring(cursor.index + direction + 1);
+			fragment.update();
+		}
+		if (direction !== 0) {
+			cursor.index += direction;
+		}
+		this.refreshCursor();
+		
 	}
 
 	writeEnter() {
@@ -60,7 +110,6 @@ export class Editor {
 			this.cursor.fragment = 0;
 			this.cursor.index = 0;
 			this.cursor.paragraph++;
-			debugger;
 			this.refreshCursor();
 		}
 	}
@@ -81,9 +130,13 @@ export class Editor {
 		let position = this.meter.getCursorPosition();
 
 		this.cursor.setPosition(position);
+		//fix cursor position
+		this.cursor.index = Math.max(0, this.cursor.index);
+		this.cursor.index = Math.min(this.getCursorFragment().text.length, this.cursor.index);
 	}
 
 	placeCaret(event: MouseEvent) {
+		//todo place caret by mouse event
 	}
 
 	getCursorArea(): Area {
@@ -103,4 +156,10 @@ export class Editor {
 
 		return this.getCursorParagraph().fragments[cursor.fragment];
 	}
+}
+
+enum Direction {
+	No = 0,
+	Left = -1,
+	Right = 1
 }
