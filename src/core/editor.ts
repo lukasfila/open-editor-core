@@ -45,13 +45,11 @@ export class Editor {
 					break;
 				//right
 				case 39:
-					this.cursor.index++;
-					this.refreshCursor();
+					this.moveCursor(Direction.Right);
 					break;
 				//left
 				case 37:
-					this.cursor.index--;
-					this.refreshCursor();
+					this.moveCursor(Direction.Left);
 					break;
 				//up
 				case 38:
@@ -78,11 +76,15 @@ export class Editor {
 			fragment = this.getCursorFragment(),
 			paragraph = cursor.paragraph;
 
-		//nothing to delete
+		//nothing to delete left
 		if (cursor.index + direction < 0 ) {
 			if (paragraph > 0) {
-				//todo delete paragraph
+				this.deleteParagraph(direction);
 			}
+			return;
+		}
+		//nothing to delete right
+		if (cursor.index + direction === fragment.text.length ) {
 			return;
 		}
 		if (fragment instanceof TextFragment) {
@@ -94,6 +96,23 @@ export class Editor {
 		}
 		this.refreshCursor();
 		
+	}
+
+	deleteParagraph(direction: Direction) {
+		let cursor = this.cursor,
+			fragment = this.getCursorFragment(),
+			paragraphIndex = cursor.paragraph,
+			area = this.getCursorArea(),
+			previousParagraph = area.paragraphs[paragraphIndex - 1],
+			paragraph = this.getCursorParagraph();
+
+		//update cursor
+		cursor.paragraph = paragraphIndex - 1;
+		cursor.fragment = 	previousParagraph.fragments.length - 1;
+		cursor.index = previousParagraph.fragments[previousParagraph.fragments.length - 1].text.length;
+		//join paragraphs
+		area.joinParagraphs(previousParagraph, paragraph);
+		this.refreshCursor();
 	}
 
 	writeEnter() {
@@ -121,18 +140,43 @@ export class Editor {
 		if (fragment instanceof TextFragment) {
 			fragment.text = fragment.text.substring(0, cursor.index) + character + fragment.text.substring(cursor.index);
 			fragment.update();
-			this.cursor.index++;
+			this.moveCursor(Direction.Right);
 			this.refreshCursor();
 		}
+	}
+
+	moveCursor(direction: Direction) {
+		let cursor = this.cursor,
+			paragraph = this.getCursorParagraph(),
+			fragment = this.getCursorFragment(),
+			fragments = paragraph.fragments;
+
+		switch (direction) {
+		case Direction.Left:
+			cursor.index--;
+			break;
+		case Direction.Right:
+			cursor.index++;
+			break;
+		}
+		if (cursor.index < 0 && cursor.fragment > 0) {
+			cursor.fragment--;
+			cursor.index = this.getCursorFragment().text.length - 1;
+		}
+		if (cursor.index > this.getCursorFragment().text.length && cursor.fragment < paragraph.fragments.length - 1) {
+			cursor.fragment++;
+			cursor.index = 1;
+		}
+		this.cursor.index = Math.max(this.cursor.index, 0);
+		this.cursor.index = Math.min(this.cursor.index, this.getCursorFragment().text.length);
+
+		this.refreshCursor();
 	}
 
 	refreshCursor() {
 		let position = this.meter.getCursorPosition();
 
 		this.cursor.setPosition(position);
-		//fix cursor position
-		this.cursor.index = Math.max(0, this.cursor.index);
-		this.cursor.index = Math.min(this.getCursorFragment().text.length, this.cursor.index);
 	}
 
 	placeCaret(event: MouseEvent) {

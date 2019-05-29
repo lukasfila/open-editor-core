@@ -29,7 +29,7 @@ export class Paragraph {
 
 		for (let i = 0; i < fragments.length; i++) {
 			iterFragment = fragments[i];
-			if (iterFragment === iterFragment) {
+			if (iterFragment === fragment) {
 				results[arrayIndex].push(iterFragment);
 				iterFragment = iterFragment.split(index);
 				arrayIndex++;
@@ -49,11 +49,24 @@ export class Paragraph {
 		this.refresh();
 		return paragraph;
 	}
+
+	join(paragraphToJoin: Paragraph) {
+		let paragraph = new Paragraph(this.paragraphStyle, [...this.fragments, ...paragraphToJoin.fragments]);
+
+		this.fragments = this.fragments.concat(paragraphToJoin.fragments);
+	}
 	refresh() {
 		let fragments = this.fragments;
 
-		for (let i = 0; i < fragments.length; i++) {
+		for (let i = fragments.length - 1;i >= 0; i--) {
 			fragments[i].refresh();
+			if (!fragments[i].element.closest("body")) {
+				if (i === fragments.length - 1) {
+					this.element.appendChild(fragments[i].element);
+				} else {
+				this.element.insertBefore(fragments[i].element, fragments[i + 1].element);
+				}
+			}
 		}
 	}
 }

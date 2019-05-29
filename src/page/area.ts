@@ -16,8 +16,14 @@ export class Area {
 		for (let i = 0; i < paragraphs.length; i++) {
 			paragraphs[i].render();
 			this.element.appendChild(paragraphs[i].element);
-
 		}
+	}
+	joinParagraphs(paragraph: Paragraph, paragraphToJoin: Paragraph) {
+		paragraph.join(paragraphToJoin);
+		this.paragraphs.slice(this.paragraphs.indexOf(paragraph), 1);
+		paragraphToJoin.element.remove();
+
+		this.refresh();
 	}
 	refresh() {
 		let paragraphs = this.paragraphs;
