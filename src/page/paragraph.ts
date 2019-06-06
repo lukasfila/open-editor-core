@@ -64,7 +64,7 @@ export class Paragraph {
 				if (i === fragments.length - 1) {
 					this.element.appendChild(fragments[i].element);
 				} else {
-				this.element.insertBefore(fragments[i].element, fragments[i + 1].element);
+					this.element.insertBefore(fragments[i].element, fragments[i + 1].element);
 				}
 			}
 		}

@@ -19,4 +19,7 @@ export class Fragment {
 	refresh() {
 		throw "Do not call here.";
 	}
+	getLastIndex() {
+		return this.text.length - 1;
+	}
 }

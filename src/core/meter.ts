@@ -1,4 +1,5 @@
 import {Editor} from "./editor";
+import { Cursor } from "./cursor";
 
 export class Meter {
 	element: HTMLElement;
@@ -16,7 +17,7 @@ export class Meter {
 		window.document.body.appendChild(this.element);
 	}
 
-	getCursorPosition(): {left: number, top: number, height: number}|null {
+	getCursorPosition(): CursorPosition|null {
 		let cursor = this.editor.cursor,
 			fragment = this.editor.getCursorFragment(),
 			bounding = fragment.element.getClientRects();
@@ -36,6 +37,39 @@ export class Meter {
 			}
 			width -= bounding[i].width;
 		}
-		return null;
+		return {
+			left: bounding[0].left,
+			top: bounding[0].top,
+			height: bounding[0].height
+		};
 	}
+
+	setCursorIndexByFragmentPosition(left: number, top: number)  {
+		console.log(left, top)
+		let cursor = this.editor.cursor,
+			fragment = this.editor.getCursorFragment(),
+			bounding = fragment.element.getClientRects(),
+			lastDifference = Number.MAX_VALUE,
+			x: number;
+
+		for (let i = 0; i < fragment.getLastIndex(); i++) {
+			this.meter.innerHTML = "";
+			this.meter.appendChild(fragment.create(cursor.index));
+			x = this.meter.offsetWidth;
+			if (x < left) {
+				if (Math.abs(lastDifference) < Math.abs(x - left)) {
+					cursor.index++;
+				}
+				return;
+			}
+			lastDifference = x - left;
+			cursor.index--;
+		}
+	}
+}
+
+interface CursorPosition {
+	left: number;
+	top: number;
+	height: number;
 }

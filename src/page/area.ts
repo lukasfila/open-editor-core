@@ -20,7 +20,7 @@ export class Area {
 	}
 	joinParagraphs(paragraph: Paragraph, paragraphToJoin: Paragraph) {
 		paragraph.join(paragraphToJoin);
-		this.paragraphs.slice(this.paragraphs.indexOf(paragraph), 1);
+		this.paragraphs.splice(this.paragraphs.indexOf(paragraphToJoin), 1);
 		paragraphToJoin.element.remove();
 
 		this.refresh();

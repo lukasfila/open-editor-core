@@ -1,6 +1,8 @@
 import {TextStyle} from "../styles/textStyle";
 import {Fragment} from "./fragment";
 
+let zeroWidthSpace = "&#8203;";
+
 export class TextFragment extends Fragment {
 	element: HTMLElement;
 	textStyle: TextStyle;
@@ -16,7 +18,7 @@ export class TextFragment extends Fragment {
 
 		element.style.fontFamily = this.textStyle.fontStyle;
 		element.style.fontSize = this.textStyle.fontSize + "pt";
-		element.innerHTML = index !== undefined ? this.text.substring(0, index) : this.text;
+		element.innerHTML = index !== undefined ? this.text.substring(0, index) : (this.text.length ? this.text : zeroWidthSpace);
 	}
 	create(index?: number): HTMLElement {
 		let element = document.createElement("span");

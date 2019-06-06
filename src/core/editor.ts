@@ -180,7 +180,40 @@ export class Editor {
 	}
 
 	placeCaret(event: MouseEvent) {
-		//todo place caret by mouse event
+		let pages = this.pages,
+			cursor = this.cursor,
+			target = event.target,
+			foundElement: HTMLElement|null = null;
+
+		this.pages.forEach((page, pageIndex) => {
+			page.areas.forEach((area, areaIndex) => {
+				area.paragraphs.forEach((paragraph, paragraphIndex) => {
+					foundElement = paragraph.element === target ? paragraph.element : null;
+					if (foundElement) {
+						cursor.page = pageIndex;;
+						cursor.area = areaIndex;
+						cursor.paragraph = paragraphIndex;
+						cursor.fragment = 0;
+						cursor.index = 0;
+						this.refreshCursor();
+						return;
+					}
+					paragraph.fragments.forEach((fragment, fragmentIndex) => {
+						foundElement = fragment.element === target ? fragment.element : null;
+						if (foundElement) {
+							cursor.page = pageIndex;;
+							cursor.area = areaIndex;
+							cursor.paragraph = paragraphIndex;
+							cursor.fragment = fragmentIndex;
+							cursor.index = fragment.getLastIndex();
+							this.meter.setCursorIndexByFragmentPosition(event.clientX - foundElement.offsetLeft, event.clientY - foundElement.offsetTop);
+							this.refreshCursor();
+							return;
+						}
+					})
+				});
+			})
+		});
 	}
 
 	getCursorArea(): Area {
