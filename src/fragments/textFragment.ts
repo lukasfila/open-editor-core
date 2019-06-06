@@ -18,6 +18,7 @@ export class TextFragment extends Fragment {
 
 		element.style.fontFamily = this.textStyle.fontStyle;
 		element.style.fontSize = this.textStyle.fontSize + "pt";
+		element.style.fontWeight = this.textStyle.fontWeight;
 		element.innerHTML = index !== undefined ? this.text.substring(0, index) : (this.text.length ? this.text : zeroWidthSpace);
 	}
 	create(index?: number): HTMLElement {
@@ -34,6 +35,29 @@ export class TextFragment extends Fragment {
 	}
 	render() {
 		return this.element;
+	}
+	measurePositionOnIndex(index: number): {x: number, y: number, h: number} {
+		let backupElement = this.element,
+			meterElement = document.createElement("span");
+
+		meterElement.innerHTML = zeroWidthSpace;
+		this.element.innerHTML = "";
+		this.element.appendChild(document.createTextNode(this.text.substring(0, index)));
+		this.element.appendChild(meterElement);
+		this.element.appendChild(document.createTextNode(this.text.substring(index)));
+
+		let x = meterElement.getBoundingClientRect().left;
+		let y = meterElement.getBoundingClientRect().top;
+		let h = meterElement.getBoundingClientRect().height;
+
+		this.element.removeChild(meterElement);
+
+		return {
+			x,
+			y,
+			h
+		}
+
 	}
 	refresh() {
 		this.update();

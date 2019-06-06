@@ -19,6 +19,14 @@ export class Fragment {
 	refresh() {
 		throw "Do not call here.";
 	}
+	measurePositionOnIndex(index: number): {x: number, y: number, h: number} {
+		return {
+			x: 0,
+			y: 0,
+			h: 0
+		}
+	}
+
 	getLastIndex() {
 		return this.text.length;
 	}

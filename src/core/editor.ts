@@ -214,12 +214,12 @@ export class Editor {
 					paragraph.fragments.forEach((fragment, fragmentIndex) => {
 						foundElement = fragment.element === target ? fragment.element : null;
 						if (foundElement) {
-							cursor.page = pageIndex;;
+							cursor.page = pageIndex;
 							cursor.area = areaIndex;
 							cursor.paragraph = paragraphIndex;
 							cursor.fragment = fragmentIndex;
 							cursor.index = fragment.getLastIndex();
-							this.meter.setCursorIndexByFragmentPosition(event.clientX - foundElement.offsetLeft, event.clientY - foundElement.offsetTop);
+							this.meter.setCursorIndexByFragmentPosition(event.clientX, event.clientY);
 							this.refreshCursor();
 							return;
 						}
