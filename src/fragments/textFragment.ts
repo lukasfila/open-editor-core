@@ -40,7 +40,9 @@ export class TextFragment extends Fragment {
 		let backupElement = this.element,
 			meterElement = document.createElement("span");
 
-		meterElement.innerHTML = zeroWidthSpace;
+		if (index === 0) {
+			meterElement.innerText = zeroWidthSpace;
+		}
 		this.element.innerHTML = "";
 		this.element.appendChild(document.createTextNode(this.text.substring(0, index)));
 		this.element.appendChild(meterElement);

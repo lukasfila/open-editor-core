@@ -147,10 +147,8 @@ export class Editor {
 
 	moveCursor(direction: Direction) {
 		let cursor = this.cursor,
-			paragraph = this.getCursorParagraph(),
-			fragment = this.getCursorFragment(),
-			fragments = paragraph.fragments;
-
+			paragraph = this.getCursorParagraph();
+			
 		switch (direction) {
 		case Direction.Left:
 			cursor.index--;
