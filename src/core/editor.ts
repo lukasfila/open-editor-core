@@ -159,13 +159,26 @@ export class Editor {
 			cursor.index++;
 			break;
 		}
-		if (cursor.index < 0 && cursor.fragment > 0) {
-			cursor.fragment--;
-			cursor.index = this.getCursorFragment().text.length - 1;
+		if (cursor.index < 0) {
+			if (cursor.fragment === 0 && cursor.paragraph > 0) {
+				cursor.paragraph--;
+				cursor.fragment = this.getCursorParagraph().fragments.length - 1;
+				cursor.index = this.getCursorFragment().getLastIndex();
+
+			} else if (cursor.fragment > 0) {
+				cursor.fragment--;
+				cursor.index = this.getCursorFragment().text.length - 1;
+			}
 		}
-		if (cursor.index > this.getCursorFragment().text.length && cursor.fragment < paragraph.fragments.length - 1) {
-			cursor.fragment++;
-			cursor.index = 1;
+		if (cursor.index > this.getCursorFragment().text.length) {
+			if (cursor.fragment === paragraph.fragments.length - 1 && cursor.paragraph < this.getCursorArea().paragraphs.length - 1) {
+				cursor.paragraph++
+				cursor.fragment = 0;
+				cursor.index = 0;
+			} else if (cursor.fragment < paragraph.fragments.length - 1) {
+				cursor.fragment++;
+				cursor.index = 1;	
+			}
 		}
 		this.cursor.index = Math.max(this.cursor.index, 0);
 		this.cursor.index = Math.min(this.cursor.index, this.getCursorFragment().text.length);

@@ -45,14 +45,13 @@ export class Meter {
 	}
 
 	setCursorIndexByFragmentPosition(left: number, top: number)  {
-		console.log(left, top)
 		let cursor = this.editor.cursor,
 			fragment = this.editor.getCursorFragment(),
 			bounding = fragment.element.getClientRects(),
 			lastDifference = Number.MAX_VALUE,
 			x: number;
 
-		for (let i = 0; i < fragment.getLastIndex(); i++) {
+		for (let i = 0; i < fragment.getLastIndex() + 1; i++) {
 			this.meter.innerHTML = "";
 			this.meter.appendChild(fragment.create(cursor.index));
 			x = this.meter.offsetWidth;

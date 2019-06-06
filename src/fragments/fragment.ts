@@ -20,6 +20,6 @@ export class Fragment {
 		throw "Do not call here.";
 	}
 	getLastIndex() {
-		return this.text.length - 1;
+		return this.text.length;
 	}
 }
