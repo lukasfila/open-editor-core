@@ -16,7 +16,7 @@ export class Page {
 		element.className = "page";
 		parentElement.appendChild(element);
 		element.style.width = this.width + "px";
-		element.style.height = this.height + "px";
+//		element.style.height = this.height + "px";
 		element.style.paddingTop = this.paddingTop + "px";
 		element.style.paddingRight = this.paddingRight + "px";
 		element.style.paddingLeft = this.paddingLeft + "px";

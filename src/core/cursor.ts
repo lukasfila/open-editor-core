@@ -39,6 +39,7 @@ export class Cursor {
 			position = meter.getCursorPosition(),
 			newPosition: CursorPosition,
 			lastPosition = position,
+			nextLine: CursorPosition,
 			found = false;
 
 		switch (direction) {
@@ -73,11 +74,18 @@ export class Cursor {
 			while (!found) {
 				this.move(Direction.Right);
 				newPosition = meter.getCursorPosition();
-				if (lastPosition.top > position.top && lastPosition.left >= position.left) {
-					if (Math.abs(position.left - lastPosition.left) < Math.abs(position.left - newPosition.left)) {
-						this.move(Direction.Left);
+				if (lastPosition.top > position.top) {
+					nextLine = lastPosition;
+					if (lastPosition.left >= position.left) {
+						if (Math.abs(position.left - lastPosition.left) < Math.abs(position.left - newPosition.left)) {
+							this.move(Direction.Left);
+						}
+						found = true;
 					}
-					found = true;
+					if (newPosition.top > nextLine.top) {
+						this.move(Direction.Left);
+						found = true;
+					}
 				}
 				found = found || cursor.isEndPosition();
 				lastPosition = newPosition;

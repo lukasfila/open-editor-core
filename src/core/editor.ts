@@ -92,15 +92,12 @@ export class Editor {
 		}
 		//nothing to delete right
 		if (cursor.index + direction === fragment.text.length ) {
-			if (paragraphIndex < area.paragraphs.length - 1) {
-				this.deleteParagraph(direction);
-				return;
-			}
 			if (fragmentIndex < paragraph.fragments.length - 1) {
 				cursor.fragment++;
 				fragment = cursor.getFragment();
 				cursor.index = 0;
-			} else {
+			} else if (paragraphIndex < area.paragraphs.length - 1) {
+				this.deleteParagraph(direction);
 				return;
 			}
 		}
@@ -143,15 +140,13 @@ export class Editor {
 			area = cursor.getArea(),
 			secondParagraph;
 
-		if (fragment instanceof TextFragment) {
-			secondParagraph = paragraph.split(fragment, cursor.index);
-			area.paragraphs.splice(area.paragraphs.indexOf(paragraph) + 1, 0, secondParagraph);
-			area.refresh();
-			this.cursor.fragment = 0;
-			this.cursor.index = 0;
-			this.cursor.paragraph++;
-			this.refreshCursor();
-		}
+		secondParagraph = paragraph.split(fragment, cursor.index);
+		area.paragraphs.splice(area.paragraphs.indexOf(paragraph) + 1, 0, secondParagraph);
+		area.refresh();
+		this.cursor.fragment = 0;
+		this.cursor.index = 0;
+		this.cursor.paragraph++;
+		this.refreshCursor();
 	}
 
 	write(character: string) {

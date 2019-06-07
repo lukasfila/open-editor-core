@@ -9,6 +9,8 @@ body {
 	background: white;
 	word-break: break-word;
 	white-space: pre-wrap;
+	cursor: text;
+	user-select: none;
 }
 .paragraph {
 	min-height: 18px;
