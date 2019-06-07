@@ -70,19 +70,39 @@ export class Editor {
 
 	deleteChar(direction: Direction) {
 		let cursor = this.cursor,
+			area = cursor.getArea(),
 			fragment = cursor.getFragment(),
-			paragraph = cursor.paragraph;
+			paragraph = cursor.getParagraph(),
+			paragraphIndex = cursor.paragraph,
+			fragmentIndex = cursor.fragment;
 
 		//nothing to delete left
 		if (cursor.index + direction < 0 ) {
-			if (paragraph > 0) {
+			if (paragraphIndex > 0) {
 				this.deleteParagraph(direction);
+				return;
 			}
-			return;
+			if (fragmentIndex > 0) {
+				cursor.fragment--;
+				fragment = cursor.getFragment();
+				cursor.index = fragment.getLastIndex();
+			} else {
+				return;
+			}
 		}
 		//nothing to delete right
 		if (cursor.index + direction === fragment.text.length ) {
-			return;
+			if (paragraphIndex < area.paragraphs.length - 1) {
+				this.deleteParagraph(direction);
+				return;
+			}
+			if (fragmentIndex < paragraph.fragments.length - 1) {
+				cursor.fragment++;
+				fragment = cursor.getFragment();
+				cursor.index = 0;
+			} else {
+				return;
+			}
 		}
 		if (fragment instanceof TextFragment) {
 			fragment.text = fragment.text.substring(0, cursor.index + direction) + fragment.text.substring(cursor.index + direction + 1);
@@ -96,6 +116,10 @@ export class Editor {
 	}
 
 	deleteParagraph(direction: Direction) {
+		//delete key - first move cursor and then do normal backspace delete
+		if (direction !== Direction.Left) {
+			this.moveCursor(Direction.Right);
+		}
 		let cursor = this.cursor,
 			fragment = cursor.getFragment(),
 			paragraphIndex = cursor.paragraph,
