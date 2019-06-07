@@ -6,9 +6,9 @@ export class Meter {
 		this.editor = editor;
 	}
 
-	getCursorPosition(): CursorPosition|null {
+	getCursorPosition(): CursorPosition {
 		let cursor = this.editor.cursor,
-			fragment = this.editor.getCursorFragment();
+			fragment = cursor.getFragment();
 
 		let {x, y, h} = fragment.measurePositionOnIndex(cursor.index);
 
@@ -21,7 +21,7 @@ export class Meter {
 
 	setCursorIndexByFragmentPosition(left: number, top: number)  {
 		let cursor = this.editor.cursor,
-			fragment = this.editor.getCursorFragment(),
+			fragment = cursor.getFragment(),
 			lastDifference = Number.MAX_VALUE;
 
 		for (let i = 0; i < fragment.getLastIndex() + 1; i++) {
@@ -40,7 +40,7 @@ export class Meter {
 	}
 }
 
-interface CursorPosition {
+export interface CursorPosition {
 	left: number;
 	top: number;
 	height: number;
