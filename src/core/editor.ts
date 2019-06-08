@@ -35,6 +35,7 @@ export class Editor {
 				//backspace
 				case 8:
 					this.deleteChar(Direction.Left);
+					event.preventDefault();
 					break;
 				//delete
 				case 46:
