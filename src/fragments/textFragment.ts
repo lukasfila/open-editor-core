@@ -27,6 +27,13 @@ export class TextFragment extends Fragment {
 		this.update(element, index);
 		return element;
 	}
+	tryMerge(fragment: Fragment): boolean {
+		if (fragment instanceof TextFragment && fragment.textStyle === this.textStyle) {
+			this.text += fragment.text;
+			return true;
+		}
+		return false;
+	}
 	split(index: number): TextFragment[] {
 		const fragment = new TextFragment(this.textStyle, this.text.substring(index));
 

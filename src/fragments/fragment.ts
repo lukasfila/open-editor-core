@@ -31,6 +31,9 @@ export class Fragment {
 		}
 		return false;
 	}
+	tryMerge(fragment: Fragment): boolean {
+		return false;
+	}
 	measurePositionOnIndex(index: number): {x: number, y: number, h: number} {
 		return {
 			x: 0,

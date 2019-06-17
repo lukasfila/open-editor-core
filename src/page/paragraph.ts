@@ -90,21 +90,25 @@ export class Paragraph {
 			return [this.fragments.indexOf(cursorFragment), cursorIndex];
 		}
 
-		for (let i = 0; i < fragments.length; i++) {
+		for (let i = fragments.length - 1; i >= 0; i--) {
 			fragment = fragments[i];
 			if (fragment.isEmpty()) {
 				toDelete.push(fragment);
+			} else if (fragments[i - 1] && fragments[i - 1].tryMerge(fragment)) {
+				toDelete[i] = fragment;
 			} else {
-				toDelete.push(null);
+				toDelete[i] = null;
 			}
 		}
 		for (let i = 0; i < fragments.length; i++) {
 			if (toDelete[i]) {
+				debugger;
 				if (cursorFragment === toDelete[i]) {
 					cursorFragment = i === 0 ? fragments[i + 1] : fragments[i - 1];
 					cursorIndex = i === 0 ? 0 : fragments[i - 1].getLastIndex();
 				}
 				toDelete[i] = null;
+				this.element.removeChild(fragments[i].element);
 				this.fragments.splice(i, 1);
 				i--;
 			}
