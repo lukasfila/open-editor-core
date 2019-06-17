@@ -1,6 +1,8 @@
 import {ParagraphStyle} from "../styles/paragraphStyle";
 import {Fragment} from "../fragments/fragment";
 
+type CursorFragment = [number, number];
+
 export class Paragraph {
 	element: HTMLElement;
 	paragraphStyle: ParagraphStyle;
@@ -50,6 +52,15 @@ export class Paragraph {
 		this.refresh();
 		return paragraph;
 	}
+	splitFragment(fragment: Fragment, index: number) {
+		let splitted: Fragment,
+			created: Fragment;
+
+		[splitted, created] = fragment.split(index);
+		this.fragments.splice(this.fragments.indexOf(fragment), 1, splitted, created);
+		this.renderFragment(index === 0 ? splitted : created);
+		return index === 0 ? splitted : created;
+	}
 
 	join(paragraphToJoin: Paragraph) {
 		let paragraph = new Paragraph(this.paragraphStyle, [...this.fragments, ...paragraphToJoin.fragments]);
@@ -70,4 +81,43 @@ export class Paragraph {
 			}
 		}
 	}
+	cleanFragments(cursorFragment: Fragment, cursorIndex: number): CursorFragment {
+		let fragments = this.fragments,
+			toDelete = [],
+			fragment: Fragment;
+
+		if (this.fragments.length === 1) {
+			return [this.fragments.indexOf(cursorFragment), cursorIndex];
+		}
+
+		for (let i = 0; i < fragments.length; i++) {
+			fragment = fragments[i];
+			if (fragment.isEmpty()) {
+				toDelete.push(fragment);
+			} else {
+				toDelete.push(null);
+			}
+		}
+		for (let i = 0; i < fragments.length; i++) {
+			if (toDelete[i]) {
+				if (cursorFragment === toDelete[i]) {
+					cursorFragment = i === 0 ? fragments[i + 1] : fragments[i - 1];
+					cursorIndex = i === 0 ? 0 : fragments[i - 1].getLastIndex();
+				}
+				toDelete[i] = null;
+				this.fragments.splice(i, 1);
+				i--;
+			}
+		}
+		return [this.fragments.indexOf(cursorFragment), cursorIndex];
+	}
+	renderFragment(fragment: Fragment)  {
+		const index = this.fragments.indexOf(fragment);
+
+		if (index === this.fragments.length - 1) {
+			this.element.append(fragment.element);
+		} else {
+			this.element.insertBefore(fragment.element, this.fragments[index + 1].element);
+		}
+	};
 }

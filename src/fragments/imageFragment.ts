@@ -48,6 +48,9 @@ export class ImageFragment extends Fragment {
 		}
 
 	}
+	isImage(): boolean {
+		return true;
+	}
 	refresh() {
 		this.update();
 	}

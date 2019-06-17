@@ -61,6 +61,9 @@ export class TextFragment extends Fragment {
 		}
 
 	}
+	isText(): boolean {
+		return true;
+	}
 	refresh() {
 		this.update();
 	}

@@ -7,7 +7,7 @@ export class Fragment {
 	create(index?: number): HTMLElement {
 		throw "Do not call here.";
 	}
-	update(given: HTMLElement|undefined) {
+	update(given?: HTMLElement|undefined) {
 		throw "Do not call here.";
 	}
 	split(index: number): Fragment[] {
@@ -19,6 +19,18 @@ export class Fragment {
 	refresh() {
 		throw "Do not call here.";
 	}
+	isImage(): boolean  {
+		return false;
+	}
+	isText(): boolean {
+		return false;
+	}
+	isEmpty(): boolean {
+		if (this.isText()) {
+			return this.getLastIndex() === 0;
+		}
+		return false;
+	}
 	measurePositionOnIndex(index: number): {x: number, y: number, h: number} {
 		return {
 			x: 0,
@@ -27,7 +39,7 @@ export class Fragment {
 		}
 	}
 
-	getLastIndex() {
+	getLastIndex(): number {
 		return this.text.length;
 	}
 }

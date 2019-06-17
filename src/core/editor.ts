@@ -2,6 +2,9 @@ import {Page} from "../page/page";
 import {Cursor, Direction} from "./cursor";
 import {TextFragment} from "../fragments/textFragment";
 import {Meter} from "./meter";
+import { ImageFragment } from "../fragments/imageFragment";
+import { Paragraph } from "../page/paragraph";
+import { Fragment } from "../fragments/fragment";
 
 export class Editor {
 	parentElement: HTMLElement;
@@ -109,8 +112,22 @@ export class Editor {
 		if (direction !== 0) {
 			cursor.index += direction;
 		}
+		this.cleanParagraphs();
 		this.refreshCursor();
 		
+	}
+
+	cleanParagraphs() {
+		const cursor = this.cursor,
+			area = cursor.getArea(),
+			fragment = cursor.getFragment();
+
+		let changedFragment: Fragment;
+
+		area.paragraphs.forEach(paragraph => {
+			let result = paragraph.cleanFragments(fragment, cursor.index);
+			[cursor.fragment, cursor.index] = paragraph === cursor.getParagraph() ? result : [cursor.fragment, cursor.index];
+		});
 	}
 
 	deleteParagraph(direction: Direction) {
@@ -131,6 +148,7 @@ export class Editor {
 		cursor.index = previousParagraph.fragments[previousParagraph.fragments.length - 1].text.length;
 		//join paragraphs
 		area.joinParagraphs(previousParagraph, paragraph);
+		this.cleanParagraphs();
 		this.refreshCursor();
 	}
 
@@ -147,6 +165,7 @@ export class Editor {
 		this.cursor.fragment = 0;
 		this.cursor.index = 0;
 		this.cursor.paragraph++;
+		this.cleanParagraphs();
 		this.refreshCursor();
 	}
 
@@ -154,10 +173,18 @@ export class Editor {
 		let cursor = this.cursor,
 			fragment = cursor.getFragment();
 
-		if (fragment instanceof TextFragment) {
+		if (fragment.isImage()) {
+			const paragraph = this.cursor.getParagraph();
+
+			fragment = paragraph.splitFragment(fragment, cursor.index);
+			cursor.fragment = paragraph.fragments.indexOf(fragment);
+			cursor.index = 0;
+		}
+		if (fragment.isText()) {
 			fragment.text = fragment.text.substring(0, cursor.index) + character + fragment.text.substring(cursor.index);
 			fragment.update();
 			this.moveCursor(Direction.Right);
+			this.cleanParagraphs();
 			this.refreshCursor();
 		}
 	}
