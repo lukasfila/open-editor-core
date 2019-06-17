@@ -10,7 +10,7 @@ export class Fragment {
 	update(given: HTMLElement|undefined) {
 		throw "Do not call here.";
 	}
-	split(index: number): Fragment {
+	split(index: number): Fragment[] {
 		throw "Do not call here.";
 	}
 	render() {

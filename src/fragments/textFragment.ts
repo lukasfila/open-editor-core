@@ -27,11 +27,11 @@ export class TextFragment extends Fragment {
 		this.update(element, index);
 		return element;
 	}
-	split(index: number): TextFragment {
-		let fragment = new TextFragment(this.textStyle, this.text.substring(index));
+	split(index: number): TextFragment[] {
+		const fragment = new TextFragment(this.textStyle, this.text.substring(index));
 
 		this.text = this.text.substring(0, index);
-		return fragment;
+		return [this, fragment];
 	}
 	render() {
 		return this.element;

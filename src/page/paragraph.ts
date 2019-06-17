@@ -24,14 +24,15 @@ export class Paragraph {
 		let paragraph = new Paragraph(this.paragraphStyle, []),
 			fragments = this.fragments,
 			iterFragment: Fragment,
+			splitted: Fragment,
 			results: Fragment[][] = [[], []],
 			arrayIndex = 0;
 
 		for (let i = 0; i < fragments.length; i++) {
 			iterFragment = fragments[i];
 			if (iterFragment === fragment) {
-				results[arrayIndex].push(iterFragment);
-				iterFragment = iterFragment.split(index);
+				[splitted, iterFragment] = iterFragment.split(index);
+				results[arrayIndex].push(splitted);
 				arrayIndex++;
 				results[arrayIndex].push(iterFragment);
 			} else {

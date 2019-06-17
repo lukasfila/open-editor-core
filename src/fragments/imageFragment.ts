@@ -32,10 +32,10 @@ export class ImageFragment extends Fragment {
 		this.update(element);
 		return element;
 	}
-	split(index: number) {
+	split(index: number): Fragment[] {
         let fragment = new TextFragment(this.textStyle, "");
 
-        return fragment;
+        return index === 0 ? [fragment, this] : [this, fragment];
 	}
 	render() {
 		return this.element;
